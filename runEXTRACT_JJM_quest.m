@@ -21,10 +21,10 @@ config.avg_cell_radius=14;
 config.trace_output_option='no_constraint';
 config.num_partitions_x=str2num(num_partitions);
 config.num_partitions_y=str2num(num_partitions); 
-config.use_gpu=0; 
+config.use_gpu=1; 
 config.max_iter = 10; 
-config.cellfind_min_snr=1;
-config.thresholds.T_min_snr=7;
+config.cellfind_min_snr=3;
+config.thresholds.T_min_snr=10;
 config.use_sparse_arrays=1;
 
 %%

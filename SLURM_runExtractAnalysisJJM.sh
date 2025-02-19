@@ -1,12 +1,14 @@
 #!/bin/bash
 #SBATCH -A p30771
-#SBATCH -p short
-#SBATCH -t 04:00:00
-#SBATCH -o ./logfiles/placeCellAnalysis.%x-%j.out # STDOUT
-#SBATCH --job-name="placeCellAnalysis"
-#SBATCH --mem-per-cpu=5200M
+#SBATCH -p gengpu
+#SBATCH --gres=gpu:a100:1
+#SBATCH --constraint=sxm
 #SBATCH -N 1
-#SBATCH -n 16
+#SBATCH -n 1
+#SBATCH -t 04:00:00
+#SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
+#SBATCH --job-name="EXTRACT_analysis"
+#SBATCH --mem=80G
 
 module purge all
 
@@ -28,7 +30,7 @@ export PATH=$PATH/projects/p30771/
 module load matlab/r2023b
 
 #cd to script directory
-cd /home/jma819/EXTRACT-public
+cd /home/jma819/EXTRACT_analysis_JJM
 #run analysis 
 
 matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));maxNumCompThreads(str2num(getenv('SLURM_NPROCS')));filePath='$INPUT_pathToMotionCorrectedFile';num_partitions='$INPUT_numPartitions';savePath='$INPUT_savePath';run('runEXTRACT_JJM_quest.m');exit;"

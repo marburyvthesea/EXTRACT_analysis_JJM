@@ -15,6 +15,7 @@ config.avg_cell_radius=14;
 config.trace_output_option='no_constraint';
 config.num_partitions_x=8;
 config.num_partitions_y=8; 
+config.parallel_cpu=1;
 config.use_gpu=0; 
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
