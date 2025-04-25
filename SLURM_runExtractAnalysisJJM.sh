@@ -4,11 +4,11 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --constraint=sxm
 #SBATCH -N 1
-#SBATCH -n 1
+#SBATCH -n 10
 #SBATCH -t 04:00:00
 #SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
 #SBATCH --job-name="EXTRACT_analysis"
-#SBATCH --mem=80G
+#SBATCH --mem=30G
 
 module purge all
 

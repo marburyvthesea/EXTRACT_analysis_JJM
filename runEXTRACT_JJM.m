@@ -11,16 +11,16 @@ disp(memoryInGB);
 
 config=[];
 config = get_defaults(config); 
-config.avg_cell_radius=14;
+config.avg_cell_radius=20;
 config.trace_output_option='no_constraint';
-config.num_partitions_x=8;
-config.num_partitions_y=8; 
-config.parallel_cpu=1;
-config.use_gpu=0; 
+config.num_partitions_x=4;
+config.num_partitions_y=4; 
+config.parallel_cpu=0;
+config.use_gpu=1; 
 config.max_iter = 10; 
-config.cellfind_min_snr=1;
-config.thresholds.T_min_snr=7;
-config.use_sparse_arrays=1;
+config.cellfind_min_snr=8;
+config.thresholds.T_min_snr=15;
+config.use_sparse_arrays=0;
 
 %%
 %%run EXTRACT

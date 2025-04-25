@@ -7,7 +7,7 @@
 [dir, session] = fileparts(filePath)
 
 
-setupEXTRACT
+%setupEXTRACT
 M = h5read(filePath, '/mov');
 % display size of movie in RAM to set x and y partitions
 info = whos('M');
@@ -17,15 +17,15 @@ disp(memoryInGB);
 
 config=[];
 config = get_defaults(config); 
-config.avg_cell_radius=14;
+config.avg_cell_radius=18;
 config.trace_output_option='no_constraint';
 config.num_partitions_x=str2num(num_partitions);
 config.num_partitions_y=str2num(num_partitions); 
 config.use_gpu=1; 
 config.max_iter = 10; 
-config.cellfind_min_snr=3;
+config.cellfind_min_snr=1;
 config.thresholds.T_min_snr=10;
-config.use_sparse_arrays=1;
+config.use_sparse_arrays=0;
 
 %%
 %%run EXTRACT
