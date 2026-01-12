@@ -1,0 +1,41 @@
+#!/bin/bash
+#SBATCH -A p30771
+#SBATCH -p gengpu
+#SBATCH --gres=gpu:a100:1
+#SBATCH --constraint=sxm
+#SBATCH -N 1
+#SBATCH -n 3
+#SBATCH -t 01:00:00
+#SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
+#SBATCH --job-name="EXTRACT_analysis"
+#SBATCH --mem=10G
+
+module purge all
+
+cd ~
+
+#path to file 
+
+INPUT_pathToMotionCorrectedFile=$1
+INPUT_numPartitions='2'
+INPUT_savePath=$3
+INPUT_cellRadius='11'
+INPUT_snr='5'
+INPUT_T_min_snr='14'
+
+echo $INPUT_pathToMotionCorrectedFile
+
+#add project directory to PATH
+export PATH=$PATH/projects/p30771/
+
+
+#load modules to use
+module load matlab/r2023b
+
+#cd to script directory
+cd /home/jma819/EXTRACT_analysis_JJM
+#run analysis 
+
+matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));maxNumCompThreads(str2num(getenv('SLURM_NPROCS')));filePath='$INPUT_pathToMotionCorrectedFile';T_snr='$INPUT_T_min_snr'=;snr='$INPUT_snr';avg_cell_radius='$INPUT_cellRadius';num_partitions='$INPUT_numPartitions';savePath='$INPUT_savePath';run('runEXTRACT_JJM_quest.m');exit;"
+
+echo 'finished analysis'

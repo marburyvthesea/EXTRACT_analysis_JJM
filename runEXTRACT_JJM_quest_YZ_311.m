@@ -32,10 +32,10 @@ config.use_sparse_arrays=0;
 output=extractor(M,config);
 
 %%
-savePathMATLAB = strcat(savePath, session, '_ExtractOut.mat');
+savePathMATLAB = strcat(savePath, session, '.mat');
 save(savePathMATLAB, 'output', '-v7.3');
 
-%savePathh5 = strcat(savePath, session, '_ExtractOut.h5');
+%savePathh5 = strcat(savePath, session, '.h5');
 %fields = fieldnames(output); % Get the field names of the structure
 %for i = 1:numel(fields)
 %    % Get the data and field name
