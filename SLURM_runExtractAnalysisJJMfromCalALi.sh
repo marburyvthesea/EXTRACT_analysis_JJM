@@ -1,0 +1,38 @@
+#!/bin/bash
+#SBATCH -A p30771
+#SBATCH -p gengpu
+#SBATCH --gres=gpu:a100:1
+#SBATCH --constraint=sxm
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=12
+#SBATCH -t 04:00:00
+#SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
+#SBATCH --job-name="EXTRACT_analysis"
+#SBATCH --mem=120G
+
+module purge all
+
+cd ~
+
+#path to file 
+
+INPUT_pathToMotionCorrectedFile=$1
+INPUT_numPartitions=$2
+INPUT_savePath=$3
+
+echo $INPUT_pathToMotionCorrectedFile
+
+#add project directory to PATH
+export PATH=$PATH/projects/p30771/
+
+
+#load modules to use
+module load matlab/r2023b
+
+#cd to script directory
+cd /home/jma819/EXTRACT_analysis_JJM
+#run analysis 
+
+matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));maxNumCompThreads(str2num(getenv('SLURM_CPUS_PER_TASK')));filePath='$INPUT_pathToMotionCorrectedFile';num_partitions='$INPUT_numPartitions';savePath='$INPUT_savePath';run('runEXTRACTfromCalAliJJM.m');exit;"
+
+echo 'finished analysis'

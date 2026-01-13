@@ -1,7 +1,7 @@
 %% load motion corrected h5 file and format for EXTRACT
 
 setupEXTRACT
-filePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/SPRT_m1_d6/2024-11-12-15-23-47_channel1_tiff_output/h5_outTestEXTRACT_2.h5';
+%filePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/SPRT_m1_d6/2024-11-12-15-23-47_channel1_tiff_output/h5_outTestEXTRACT_2.h5';
 M = load(filePath).Y;
 %% display size of movie in RAM to set x and y partitions
 info = whos('M');
@@ -13,9 +13,9 @@ config=[];
 config = get_defaults(config); 
 config.avg_cell_radius=21;
 config.trace_output_option='no_constraint';
-config.num_partitions_x=4;
-config.num_partitions_y=4; 
-config.use_gpu=0; 
+config.num_partitions_x= num_partitions;
+config.num_partitions_y= num_partitions; 
+config.use_gpu=1; 
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
 config.thresholds.T_min_snr=7;
@@ -27,8 +27,8 @@ config.thresholds.spatial_corrupt_thresh=2.5;
 output=extractor(M,config);
 
 %%
-savePathMATLAB = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData_outTestEXTRACT_2_EXTRACTOutput.mat';
-save(savePathMATLAB, 'output', '-v7.3');
+%savePathMATLAB = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData_outTestEXTRACT_2_EXTRACTOutput.mat';
+save(savePath, 'output', '-v7.3');
 
 %savePathh5 = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/11_15_59_02_green_EXTRACTOutput.h5';
 %fields = fieldnames(output); % Get the field names of the structure
