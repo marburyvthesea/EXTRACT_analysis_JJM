@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH -A p30771
 #SBATCH -p gengpu
-#SBATCH --gres=gpu:a100:1
+#SBATCH --gres=gpu:a100:2
 #SBATCH --constraint=sxm
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=16
 #SBATCH -t 04:00:00
 #SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
 #SBATCH --job-name="EXTRACT_analysis"
@@ -36,6 +36,6 @@ cd /home/jma819/EXTRACT_analysis_JJM
 
 echo "Using $SLURM_CPUS_PER_TASK CPUs on GPU $CUDA_VISIBLE_DEVICES"
 
-matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));nCPUs=str2double(getenv('SLURM_CPUS_PER_TASK'));maxNumCompThreads(nCPUs);filePath='$INPUT_pathToMotionCorrectedFile';num_partitions=str2double('$INPUT_numPartitions');savePath='$INPUT_savePath';run('runEXTRACT_JJM_quest_YZ_311_2.m');exit;"
+matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));nCPUs=str2double(getenv('SLURM_CPUS_PER_TASK'));maxNumCompThreads(nCPUs);filePath='$INPUT_pathToMotionCorrectedFile';num_partitions=str2double('$INPUT_numPartitions');savePath='$INPUT_savePath';run('runEXTRACT_JJM_quest_YZ_311_2_multGPU.m');exit;"
 
 echo 'finished analysis'

@@ -8,11 +8,14 @@
 
 
 %setupEXTRACT
-M = h5read(filePath, '/mov');
+M = {filePath, '/mov'};
 % display size of movie in RAM to set x and y partitions
-info = whos('M');
-memoryInGB = info.bytes / (1024^3);
-disp(memoryInGB);
+
+info = h5info(filePath, '/mov');
+
+movieInGB = info.Dataspace.Size(1)*info.Dataspace.Size(2)*info.Dataspace.Size(3) * 4 / 1024^3; % assuming single;
+
+disp(movieInGB);
 disp('path to save output file:');
 disp(savePath);
 %% set parameters for extraction
@@ -31,6 +34,8 @@ config.trace_output_option='no_constraint';
 config.num_partitions_x=num_partitions;
 config.num_partitions_y=num_partitions; 
 config.use_gpu=1; 
+config.multi_gpu=1; 
+config.num_workers=2;
 config.max_iter = 10; 
 config.cellfind_min_snr=9;
 config.thresholds.T_min_snr=19;
@@ -38,7 +43,21 @@ config.use_sparse_arrays=0;
 
 %%
 %%run EXTRACT
+
+parpool('local', config.num_workers);
+
 output=extractor(M,config);
+
+p=gcp('nocreate');
+if ~isempty(p)
+    idx = zeros(p.NumWorkers,1);
+    parfor i = 1:p.NumWorkers
+        di = gpuDevice;
+        idx(i) = di.Index;
+    end
+    disp(idx);
+end
+
 
 %%
 savePathMATLAB = strcat(savePath, session, '.mat');
