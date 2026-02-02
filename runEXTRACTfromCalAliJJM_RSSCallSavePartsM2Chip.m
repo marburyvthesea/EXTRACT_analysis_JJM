@@ -1,6 +1,7 @@
 %% load motion corrected h5 file and format for EXTRACT
 
 setupEXTRACT
+%filePath comes from command line on quest 
 %filePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/SPRT_m1_d6/2024-11-12-15-23-47_channel1_tiff_output/h5_outTestEXTRACT_2.h5';
 %filePath = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData/260105_134901_ses01_ds_mc_Aligned.mat';
 M = load(filePath).Y;
@@ -12,12 +13,13 @@ disp(memoryInGB);
 
 config=[];
 config = get_defaults(config); 
-%config.parallel_cpu = 1;
 config.avg_cell_radius=21;
 config.trace_output_option='no_constraint';
-config.num_partitions_x=4;
-config.num_partitions_y=4; 
-config.use_gpu=0; 
+config.num_partitions_x=num_partitions;
+config.num_partitions_y=num_partitions; 
+config.use_gpu=0;
+config.parallel_cpu=1; 
+config.num_workers=max(1, feature('numCores')-1); 
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
 config.thresholds.T_min_snr=7;
@@ -31,12 +33,14 @@ config.partition_save_dir = fullfile(tempdir, "extract_parts_" + string(round(po
 mkdir(config.partition_save_dir);
 config.callNum = 100; % your RSS print frequency
 
+parpool('local', config.num_workers);
 %%
 %%run EXTRACT
 output=extractor_callRSS_saveParts(M,config);
 
 %%
-savePathMATLAB = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData_outTestEXTRACT_2_EXTRACTOutput.mat';
+%savePathMATLAB comes from command line on quest
+%savePathMATLAB = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData_outTestEXTRACT_2_EXTRACTOutput.mat';
 save(savePathMATLAB, 'output', '-v7.3');
 
 %savePathh5 = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/11_15_59_02_green_EXTRACTOutput.h5';
