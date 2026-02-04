@@ -16,8 +16,8 @@ config = get_defaults(config);
 %config.parallel_cpu = 1;
 config.avg_cell_radius=21;
 config.trace_output_option='no_constraint';
-config.num_partitions_x=num_partitions;
-config.num_partitions_y=num_partitions; 
+config.num_partitions_x=1;
+config.num_partitions_y=1; 
 config.use_gpu=1; 
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
@@ -28,7 +28,7 @@ config.callNum = 5;
 
 %
 config.save_partition_results = true;
-config.partition_save_dir = fullfile(tempdir, "extract_parts_" + string(round(posixtime(datetime))));
+config.partition_save_dir = fullfile("/scratch/jma819","extract_parts_" + string(getenv("SLURM_JOB_ID")));
 mkdir(config.partition_save_dir);
 config.callNum = 100; % your RSS print frequency
 
