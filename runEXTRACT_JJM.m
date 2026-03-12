@@ -1,8 +1,8 @@
 %% load motion corrected h5 file and format for EXTRACT
 
 setupEXTRACT
-filePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/SPRT_m1_d6/2024-11-12-15-23-47_channel1_tiff_output/h5_outTestEXTRACT_2.h5';
-M = h5read(filePath, '/data');
+filePath = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData/Day9rec_2025_01_28_14_08_34_My_V4_Miniscope_53_ds_mc_Aligned.h5';
+M = h5read(filePath, '/mov');
 % display size of movie in RAM to set x and y partitions
 info = whos('M');
 memoryInGB = info.bytes / (1024^3);
