@@ -39,7 +39,7 @@ config.num_workers=2;
 config.max_iter = 10; 
 config.cellfind_min_snr=cellfind_min_snr;
 config.thresholds.T_min_snr=T_min_snr;
-config.use_sparse_arrays=0;i
+config.use_sparse_arrays=0;
 config.dendrite_aware=logical(dendrite_aware);
 
 fprintf("avg_cell_radius=%g\n", config.avg_cell_radius);
@@ -67,10 +67,10 @@ end
 
 
 %%
-savePathMATLAB = strcat(savePath, session, '.mat');
+ts = char(datetime('now','Format','yyyyMMdd_HHmmss_SSS'));
+savePathMATLAB = fullfile(savePath, sprintf('%s_%s.mat', session, ts));
+fprintf("Saving to: %s\n", savePathMATLAB);
 save(savePathMATLAB, 'output', '-v7.3');
-disp('saving:');
-disp(savePathMATLAB);
 
 %savePathh5 = strcat(savePath, session, '.h5');
 %fields = fieldnames(output); % Get the field names of the structure
