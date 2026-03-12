@@ -4,8 +4,42 @@
 %filePath = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/gray_00denoised00_converted___motion_corrected.h5';
 %num_partitions
 %savePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/';
-[dir, session] = fileparts(filePath)
 
+% ---- INPUT: filePath can be .h5 or .mat ----
+[dirPath, session, ext] = fileparts(filePath);
+
+dsetName = '/mov';     % for .h5
+matVar   = 'Y';        % for .mat (change if needed)
+
+switch lower(ext)
+    case {'.h5', '.hdf5'}
+        % Stream from disk (recommended for big movies)
+        M = {filePath, dsetName};
+
+        info = h5info(filePath, dsetName);
+        % If stored as single: 4 bytes; uint16: 2 bytes, etc.
+        bytesPerEl = datatype_bytes(info.Datatype);
+        movieInGB = prod(double(info.Dataspace.Size)) * bytesPerEl / 1024^3;
+
+    case '.mat'
+        % Load into RAM (can be huge!)
+        S = load(filePath, matVar);
+        if ~isfield(S, matVar)
+            error('MAT file %s does not contain variable "%s".', filePath, matVar);
+        end
+        M = S.(matVar);
+
+        w = whos('M');
+        movieInGB = w.bytes / 1024^3;
+
+    otherwise
+        error('Unsupported input "%s". Use .h5/.hdf5 (dataset %s) or .mat (variable %s).', ...
+              ext, dsetName, matVar);
+end
+
+fprintf('Movie size estimate: %.3f GB\n', movieInGB);
+disp('path to save output file:');
+disp(savePath);
 
 %setupEXTRACT
 M = {filePath, '/mov'};
