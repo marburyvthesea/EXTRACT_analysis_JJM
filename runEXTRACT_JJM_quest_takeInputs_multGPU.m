@@ -41,15 +41,6 @@ fprintf('Movie size estimate: %.3f GB\n', movieInGB);
 disp('path to save output file:');
 disp(savePath);
 
-%setupEXTRACT
-M = {filePath, '/mov'};
-% display size of movie in RAM to set x and y partitions
-
-info = h5info(filePath, '/mov');
-
-movieInGB = info.Dataspace.Size(1)*info.Dataspace.Size(2)*info.Dataspace.Size(3) * 4 / 1024^3; % assuming single;
-
-disp(movieInGB);
 disp('path to save output file:');
 disp(savePath);
 %% set parameters for extraction
@@ -60,7 +51,6 @@ disp(d.Name);
 disp(d.Index);
 disp(d.AvailableMemory/2^30);
 
-
 config=[];
 config = get_defaults(config); 
 config.avg_cell_radius=avg_cell_radius;
@@ -69,7 +59,7 @@ config.num_partitions_x=num_partitions;
 config.num_partitions_y=num_partitions; 
 config.use_gpu=1; 
 config.multi_gpu=1; 
-config.num_workers=2;
+config.num_workers=8;
 config.max_iter = 10; 
 config.cellfind_min_snr=cellfind_min_snr;
 config.thresholds.T_min_snr=T_min_snr;
