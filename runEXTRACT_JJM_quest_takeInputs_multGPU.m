@@ -23,14 +23,10 @@ switch lower(ext)
 
     case '.mat'
         % Load into RAM (can be huge!)
-        S = load(filePath, matVar);
-        if ~isfield(S, matVar)
-            error('MAT file %s does not contain variable "%s".', filePath, matVar);
-        end
-        M = S.(matVar);
-
-        w = whos('M');
-        movieInGB = w.bytes / 1024^3;
+        M = {filePath, matVar};
+        mf = matfile(filePath);
+        sz = size(mf, matVar);
+        movieInGB = prod(double(sz)) * 2 / 1024^3;
 
     otherwise
         error('Unsupported input "%s". Use .h5/.hdf5 (dataset %s) or .mat (variable %s).', ...
@@ -74,10 +70,11 @@ fprintf("dendrite_aware=%d\n", config.dendrite_aware);
 
 %%
 %%run EXTRACT
+if ~(isfield(config,'multi_gpu') && config.multi_gpu)
+    parpool('local', config.num_workers);
+end
 
-parpool('local', config.num_workers);
-
-output=extractor(M,config);
+output=extractor_MATcompatible(M,config);
 
 p=gcp('nocreate');
 if ~isempty(p)
