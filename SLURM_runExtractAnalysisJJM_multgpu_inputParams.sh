@@ -54,7 +54,7 @@ cd /home/jma819/EXTRACT_analysis_JJM
 
 echo "Using $SLURM_CPUS_PER_TASK CPUs on GPU $CUDA_VISIBLE_DEVICES"
 
-matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));nCPUs=str2double(getenv('SLURM_CPUS_PER_TASK'));maxNumCompThreads(nCPUs);filePath='$INPUT_pathToMotionCorrectedFile';num_partitions=str2double('$INPUT_numPartitions');savePath='$INPUT_savePath'; \
+matlab -nosplash -nodesktop -r "addpath(genpath('/home/jma819/EXTRACT-public_JJM'));addpath(genpath('/home/jma819/EXTRACT_analysis_JJM'));nCPUs=str2double(getenv('SLURM_CPUS_PER_TASK'));maxNumCompThreads(nCPUs);filePath='$INPUT_pathToMotionCorrectedFile';num_partitions=str2double('$INPUT_numPartitions');savePath='$INPUT_savePath'; \
 avg_cell_radius=str2double('$INPUT_avg_cell_radius'); \
 trace_output_option='$INPUT_trace_output_option'; \
 cellfind_min_snr=str2double('$INPUT_cellfind_min_snr'); \
