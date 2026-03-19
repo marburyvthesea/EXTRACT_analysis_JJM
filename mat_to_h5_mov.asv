@@ -33,10 +33,6 @@ function mat_to_h5_mov(matPath, h5Path, varName, dsetName, framesPerChunk, castT
     sz = info.size;                 % [H W T]
     clsIn = string(info.class);
 
-    mf = matfile(matPath);           % doesn't load Y
-    tmp = mf.(varName)(1,1,1); %#ok<NASGU>
-    clear tmp
-    
     if numel(sz) ~= 3
         error('Expected %s to be 3D [H x W x T]. Got size: %s', varName, mat2str(sz));
     end

@@ -36,7 +36,8 @@ config.callNum = 100; % your RSS print frequency
 parpool('local', config.num_workers);
 %%
 %%run EXTRACT
-output=extractor_callRSS_saveParts(M,config);
+%output=extractor_callRSS_saveParts(M,config);
+output=extractor_MATcompatible(M,config);
 
 %%
 %savePathMATLAB comes from command line on quest
