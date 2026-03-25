@@ -9,7 +9,7 @@
 #SBATCH -t 04:00:00
 #SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
 #SBATCH --job-name="EXTRACT_analysis"
-#SBATCH --mem=128G
+#SBATCH --mem=450G
 
 module purge all
 
@@ -42,7 +42,8 @@ echo "dendrite_aware: $INPUT_dendrite_aware"
 
 
 #add project directory to PATH
-export PATH=$PATH/projects/p30771/
+export PATH="$PATH:/projects/p30771/"
+export PATH="$PATH:/scratch/jma819/"
 
 
 #load modules to use
