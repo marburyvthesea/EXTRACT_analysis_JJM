@@ -17,7 +17,7 @@ disp(memoryInGB);
 
 config=[];
 config = get_defaults(config); 
-config.avg_cell_radius=21;
+config.avg_cell_radius=9;
 config.trace_output_option='baseline_adjusted';
 config.num_partitions_x=num_partitions;
 config.num_partitions_y=num_partitions; 
@@ -27,7 +27,7 @@ config.num_workers=max(1, feature('numCores')-4);
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
 config.thresholds.T_min_snr=7;
-config.use_sparse_arrays=1;
+config.use_sparse_arrays=0;
 config.thresholds.spatial_corrupt_thresh=2.5; 
 config.callNum = 5;
 
