@@ -58,6 +58,6 @@ avg_cell_radius=str2double('$INPUT_avg_cell_radius'); \
 trace_output_option='$INPUT_trace_output_option'; \
 cellfind_min_snr=str2double('$INPUT_cellfind_min_snr'); \
 T_min_snr=str2double('$INPUT_T_min_snr'); \
-dendrite_aware=str2double('$INPUT_dendrite_aware');run('runEXTRACT_JJM_quest_takeInputs_multCPU.m');exit;"
+dendrite_aware=str2double('$INPUT_dendrite_aware');run('runEXTRACT_JJM_quest_takeInputs_multCPU_RSSsaveparts.m');exit;"
 
 echo 'finished analysis'
