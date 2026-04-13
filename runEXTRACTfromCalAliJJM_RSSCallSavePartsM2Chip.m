@@ -4,7 +4,11 @@ setupEXTRACT
 %filePath comes from command line on quest 
 %filePath = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/SPRT_m1_d6/2024-11-12-15-23-47_channel1_tiff_output/h5_outTestEXTRACT_2.h5';
 %filePath = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData/260105_134901_ses01_ds_mc_Aligned.mat';
-M = load(filePath).Y;
+M = {filePath, '/mov'};
+
+info = h5info(filePath, '/mov');
+fprintf("H5 movie size: %s\n", mat2str(info.Dataspace.Size));
+
 %% display size of movie in RAM to set x and y partitions
 info = whos('M');
 memoryInGB = info.bytes / (1024^3);
@@ -14,12 +18,12 @@ disp(memoryInGB);
 config=[];
 config = get_defaults(config); 
 config.avg_cell_radius=21;
-config.trace_output_option='no_constraint';
+config.trace_output_option='baseline_adjusted';
 config.num_partitions_x=num_partitions;
 config.num_partitions_y=num_partitions; 
 config.use_gpu=0;
 config.parallel_cpu=1; 
-config.num_workers=max(1, feature('numCores')-1); 
+config.num_workers=max(1, feature('numCores')-4); 
 config.max_iter = 10; 
 config.cellfind_min_snr=1;
 config.thresholds.T_min_snr=7;
@@ -36,12 +40,21 @@ config.callNum = 100; % your RSS print frequency
 parpool('local', config.num_workers);
 %%
 %%run EXTRACT
-%output=extractor_callRSS_saveParts(M,config);
-output=extractor_MATcompatible(M,config);
+output=extractor_callRSS_saveParts(M,config);
+%output=extractor_MATcompatible(M,config);
 
 %%
 %savePathMATLAB comes from command line on quest
 %savePathMATLAB = '/Users/johnmarshall/Documents/Analysis/miniscope_analysis/caliAliData_outTestEXTRACT_2_EXTRACTOutput.mat';
+[dirPath, session, ext] = fileparts(filePath);
+ts = char(datetime('now','Format','yyyyMMdd_HHmmss_SSS'));
+
+if ~exist(savePath, "dir")
+     mkdir(savePath);
+end
+
+savePathMATLAB = fullfile(savePath, sprintf('%s_%s.mat', session, ts));
+fprintf("Saving to: %s\n", savePathMATLAB);
 save(savePathMATLAB, 'output', '-v7.3');
 
 %savePathh5 = '/Users/johnmarshall/Documents/Analysis/nVueData/SPRT/11_15_59_02_green_EXTRACTOutput.h5';
