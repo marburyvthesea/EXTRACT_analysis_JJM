@@ -82,10 +82,26 @@ DSET_NAME_Q=$(matlab_quote "${DSET_NAME}")
 CAST_TO_Q=$(matlab_quote "${CAST_TO}")
 
 MATLAB_CMD="addpath($(matlab_quote "${MATLAB_FUNC_DIR}"));"
-MATLAB_CMD+=" mat_to_h5_mov(${MAT_PATH_Q}, ${H5_PATH_Q}, ${VAR_NAME_Q}, ${DSET_NAME_Q}, ${FRAMES_PER_CHUNK}, ${CAST_TO_Q}"
+MATLAB_CMD+=" mat_to_h5_mov(${MAT_PATH_Q}, ${H5_PATH_Q}"
 
-if [[ -n "${FRAME_START}" || -n "${FRAME_END}" ]]; then
-  if [[ -z "${FRAME_START}" || -z "${FRAME_END}" ]]; then
+if [[ $# -ge 3 ]]; then
+  MATLAB_CMD+=", ${VAR_NAME_Q}"
+fi
+
+if [[ $# -ge 4 ]]; then
+  MATLAB_CMD+=", ${DSET_NAME_Q}"
+fi
+
+if [[ $# -ge 5 ]]; then
+  MATLAB_CMD+=", ${FRAMES_PER_CHUNK}"
+fi
+
+if [[ $# -ge 6 ]]; then
+  MATLAB_CMD+=", ${CAST_TO_Q}"
+fi
+
+if [[ $# -ge 7 || $# -ge 8 ]]; then
+  if [[ $# -lt 8 ]]; then
     echo "Error: FRAME_START and FRAME_END must be provided together." >&2
     exit 1
   fi
