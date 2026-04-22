@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH -A p30771
-#SBATCH -p normal
+#SBATCH -p long
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --cpus-per-task=4
-#SBATCH -t 48:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH -t 168:00:00
 #SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
 #SBATCH --job-name="EXTRACT_analysis"
-#SBATCH --mem=180G
+#SBATCH --mem=450G
 
 module purge all
 

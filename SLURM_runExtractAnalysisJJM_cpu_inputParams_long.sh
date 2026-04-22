@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH -A p30771
-#SBATCH -p normal
+#SBATCH -p long
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --cpus-per-task=4
-#SBATCH -t 48:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH -t 168:00:00
 #SBATCH -o ./logfiles/EXTRACT_analysis.%x-%j.out # STDOUT
 #SBATCH --job-name="EXTRACT_analysis"
-#SBATCH --mem=180G
+#SBATCH --mem=400G
 
 module purge all
 
@@ -28,6 +28,7 @@ INPUT_trace_output_option="${5:-no_constraint}"   # string
 INPUT_cellfind_min_snr="${6:-8}"
 INPUT_T_min_snr="${7:-15}"
 INPUT_dendrite_aware="${8:-0}"                   # 0 or 1
+INPUT_downsample_time_by="${9:-1}" 
 
 echo "file:  $INPUT_pathToMotionCorrectedFile"
 echo "parts: $INPUT_numPartitions"
@@ -37,7 +38,7 @@ echo "trace_output_option: $INPUT_trace_output_option"
 echo "cellfind_min_snr: $INPUT_cellfind_min_snr"
 echo "T_min_snr: $INPUT_T_min_snr"
 echo "dendrite_aware: $INPUT_dendrite_aware"
-
+echo "downsample_time_by: $INPUT_downsample_time_by"
 
 #add project directory to PATH
 export PATH="$PATH:/projects/p30771/"
@@ -58,6 +59,8 @@ avg_cell_radius=str2double('$INPUT_avg_cell_radius'); \
 trace_output_option='$INPUT_trace_output_option'; \
 cellfind_min_snr=str2double('$INPUT_cellfind_min_snr'); \
 T_min_snr=str2double('$INPUT_T_min_snr'); \
-dendrite_aware=str2double('$INPUT_dendrite_aware');run('runEXTRACT_JJM_quest_takeInputs_multCPU_RSSsaveparts.m');exit;"
+dendrite_aware=str2double('$INPUT_dendrite_aware'); \
+downsample_time_by=str2double('$INPUT_downsample_time_by'); \
+run('runEXTRACT_JJM_quest_takeInputs_multCPU.m');exit;"
 
 echo 'finished analysis'

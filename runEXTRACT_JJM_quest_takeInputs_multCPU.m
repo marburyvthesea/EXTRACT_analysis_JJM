@@ -53,6 +53,13 @@ end
 
 config=[];
 config = get_defaults(config); 
+% downsample_time_by optional (default 1)
+if exist("downsample_time_by","var") && ~isempty(downsample_time_by) && isfinite(downsample_time_by) && downsample_time_by >= 1
+    config.downsample_time_by = downsample_time_by;
+else
+    config.downsample_time_by = 1;
+end
+fprintf("downsample_time_by=%g\n", config.downsample_time_by);
 config.avg_cell_radius=avg_cell_radius;
 config.trace_output_option=trace_output_option;
 config.num_partitions_x=num_partitions;
