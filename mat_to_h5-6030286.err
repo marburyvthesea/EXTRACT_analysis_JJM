@@ -1,7 +1,0 @@
-{Error using whos
-Could not find
-combinedDenoisedMatFiles_ds4/day_013_2025_01_10_992_20_15_47_denoised_converted_concat_ds_mc_Aligned.mat.
-
-Error in mat_to_h5_mov (line 29)
-    info = whos('-file', matPath, varName);
-} 
