@@ -1,0 +1,5 @@
+{Not enough input arguments.
+
+Error in mat_to_h5_mov (line 19)
+    if isstring(varName),  varName  = char(varName);  end
+} 

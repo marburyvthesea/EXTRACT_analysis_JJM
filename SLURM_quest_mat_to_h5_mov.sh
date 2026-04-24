@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH -A p30771
-#SBATCH -p short
+#SBATCH -p normal
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=25G
 #SBATCH --time=02:00:00
+#SBATCH -e ./logfiles/mat_to_h5.%x-%j.err
 #SBATCH -o ./logfiles/mat_to_h5.%x-%j.out # STDOUT
 #SBATCH --job-name="mat_to_h5"
 #SBATCH --error=%x-%j.err
