@@ -15,15 +15,15 @@ function mat_to_h5_mov(matPath, h5Path, varName, dsetName, framesPerChunk, castT
 %   - Output dataset time dimension is (frameEnd-frameStart+1).
 %   - Stores MAT frameStart/frameEnd as H5 attributes for provenance.
 
-    % --- normalize string/char inputs for R2023b ---
-    if isstring(varName),  varName  = char(varName);  end
-    if isstring(dsetName), dsetName = char(dsetName); end
-    if isstring(castTo),   castTo   = char(castTo);   end
-
     if nargin < 3 || isempty(varName),        varName = "Y"; end
     if nargin < 4 || isempty(dsetName),      dsetName = "/mov"; end
     if nargin < 5 || isempty(framesPerChunk),framesPerChunk = 200; end
     if nargin < 6,                          castTo = ""; end
+
+    % --- normalize string/char inputs for R2023b ---
+    if isstring(varName),  varName  = char(varName);  end
+    if isstring(dsetName), dsetName = char(dsetName); end
+    if isstring(castTo),   castTo   = char(castTo);   end
 
     % Inspect variable without loading it
     info = whos('-file', matPath, varName);
