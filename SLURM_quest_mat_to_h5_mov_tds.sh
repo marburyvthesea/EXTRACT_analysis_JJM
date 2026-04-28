@@ -16,9 +16,9 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  sbatch quest_mat_to_h5_mov.sbatch MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [FRAME_START] [FRAME_END]
-  sbatch SLURM_quest_mat_to_h5_mov.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [FRAME_START] [FRAME_END] [DOWNSAMPLE_INPUT]
-  sbatch SLURM_quest_mat_to_h5_mov.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [--downsample-input N]
+  sbatch quest_mat_to_h5_mov_tds.sbatch MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [FRAME_START] [FRAME_END]
+  sbatch SLURM_quest_mat_to_h5_mov_tds.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [FRAME_START] [FRAME_END] [DOWNSAMPLE_INPUT]
+  sbatch SLURM_quest_mat_to_h5_mov_tds.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [--downsample-input N]
 
 Positional arguments:
   MAT_PATH          Input MAT-file path
@@ -28,12 +28,12 @@ Positional arguments:
   DOWNSAMPLE_INPUT  Temporal step size; 1 keeps every frame, 2 keeps every other frame, etc. (default: 1)
 
 Example:
-  sbatch quest_mat_to_h5_mov.sbatch \
+  sbatch quest_mat_to_h5_mov_tds.sbatch \
     /path/input.mat /path/output.h5 Y /mov 200 single 1000 2000
-  sbatch SLURM_quest_mat_to_h5_mov.sh \
+  sbatch SLURM_quest_mat_to_h5_mov._tdssh \
     /path/input.mat /path/output.h5 Y /mov 200 single 1000 2000 2
 
-  sbatch SLURM_quest_mat_to_h5_mov.sh \
+  sbatch SLURM_quest_mat_to_h5_mov_tds.sh \
     /path/input.mat /path/output.h5 Y /mov 200 single --downsample-input 2
 
 Notes:
