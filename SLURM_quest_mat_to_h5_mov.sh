@@ -8,7 +8,6 @@
 #SBATCH -e ./logfiles/mat_to_h5.%x-%j.err
 #SBATCH -o ./logfiles/mat_to_h5.%x-%j.out # STDOUT
 #SBATCH --job-name="mat_to_h5"
-#SBATCH --error=%x-%j.err
 
 set -euo pipefail
 
@@ -166,6 +165,8 @@ if [[ "${DOWNSAMPLE_EXPLICIT}" -eq 1 ]]; then
 fi
 
 MATLAB_CMD+=");"
+
+mkdir -p logfiles
 
 module purge
 module load matlab/r2023b
