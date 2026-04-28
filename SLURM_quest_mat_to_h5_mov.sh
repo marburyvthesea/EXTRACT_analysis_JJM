@@ -16,6 +16,7 @@ usage() {
 Usage:
   sbatch SLURM_quest_mat_to_h5_mov.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [FRAME_START] [FRAME_END] [DOWNSAMPLE_INPUT]
   sbatch SLURM_quest_mat_to_h5_mov.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [--downsample-input N]
+  sbatch SLURM_quest_mat_to_h5_mov.sh MAT_PATH H5_PATH [VAR_NAME] [DSET_NAME] [FRAMES_PER_CHUNK] [CAST_TO] [--downsample-input N] [--deflate-level N]
 
 Positional arguments:
   MAT_PATH          Input MAT-file path
@@ -23,10 +24,11 @@ Positional arguments:
   VAR_NAME          MATLAB variable name (default: Y)
   DSET_NAME         HDF5 dataset name (default: /mov)
   FRAMES_PER_CHUNK  Frames per chunk (default: 200)
-  CAST_TO           Output datatype, e.g. single, uint16 (default: keep source type)
+  CAST_TO           Output datatype, e.g. single, uint16, uint16_scaled (default: keep source type)
   FRAME_START       First frame to export (default: 1)
   FRAME_END         Last frame to export (default: full movie)
   DOWNSAMPLE_INPUT  Temporal step size; 1 keeps every frame, 2 keeps every other frame, etc. (default: 1)
+  DEFLATE_LEVEL     HDF5 gzip compression level from 0-9 (default: 0)
 
 Example:
   sbatch SLURM_quest_mat_to_h5_mov.sh \
@@ -34,6 +36,9 @@ Example:
 
   sbatch SLURM_quest_mat_to_h5_mov.sh \
     /path/input.mat /path/output.h5 Y /mov 200 single --downsample-input 2
+
+  sbatch SLURM_quest_mat_to_h5_mov.sh \
+    /path/input.mat /path/output.h5 Y /mov 200 uint16_scaled --downsample-input 2 --deflate-level 4
 
 Notes:
   - This script expects mat_to_h5_mov_tds.m at:
@@ -46,6 +51,8 @@ EOF
 POSITIONAL_ARGS=()
 DOWNSAMPLE_INPUT=""
 DOWNSAMPLE_EXPLICIT=0
+DEFLATE_LEVEL=""
+DEFLATE_EXPLICIT=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -60,6 +67,15 @@ while [[ $# -gt 0 ]]; do
       fi
       DOWNSAMPLE_INPUT="$2"
       DOWNSAMPLE_EXPLICIT=1
+      shift 2
+      ;;
+    --deflate-level)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: --deflate-level requires a value." >&2
+        exit 1
+      fi
+      DEFLATE_LEVEL="$2"
+      DEFLATE_EXPLICIT=1
       shift 2
       ;;
     --)
@@ -106,6 +122,13 @@ if [[ "${DOWNSAMPLE_EXPLICIT}" -eq 0 ]]; then
   fi
 fi
 
+if [[ "${DEFLATE_EXPLICIT}" -eq 0 ]]; then
+  DEFLATE_LEVEL="${10:-0}"
+  if [[ $# -ge 10 ]]; then
+    DEFLATE_EXPLICIT=1
+  fi
+fi
+
 matlab_quote() {
   local s="${1//\'/\'\'}"
   printf "'%s'" "$s"
@@ -118,6 +141,11 @@ fi
 
 if ! [[ "${DOWNSAMPLE_INPUT}" =~ ^[0-9]+$ ]] || [[ "${DOWNSAMPLE_INPUT}" -lt 1 ]]; then
   echo "Error: DOWNSAMPLE_INPUT must be a positive integer. Got: ${DOWNSAMPLE_INPUT}" >&2
+  exit 1
+fi
+
+if ! [[ "${DEFLATE_LEVEL}" =~ ^[0-9]+$ ]] || [[ "${DEFLATE_LEVEL}" -gt 9 ]]; then
+  echo "Error: DEFLATE_LEVEL must be an integer from 0 to 9. Got: ${DEFLATE_LEVEL}" >&2
   exit 1
 fi
 
@@ -156,12 +184,16 @@ if [[ $# -ge 7 || $# -ge 8 ]]; then
     exit 1
   fi
   MATLAB_CMD+=", ${FRAME_START}, ${FRAME_END}"
-elif [[ "${DOWNSAMPLE_EXPLICIT}" -eq 1 ]]; then
+elif [[ "${DOWNSAMPLE_EXPLICIT}" -eq 1 || "${DEFLATE_EXPLICIT}" -eq 1 ]]; then
   MATLAB_CMD+=", [], []"
 fi
 
-if [[ "${DOWNSAMPLE_EXPLICIT}" -eq 1 ]]; then
+if [[ "${DOWNSAMPLE_EXPLICIT}" -eq 1 || "${DEFLATE_EXPLICIT}" -eq 1 ]]; then
   MATLAB_CMD+=", ${DOWNSAMPLE_INPUT}"
+fi
+
+if [[ "${DEFLATE_EXPLICIT}" -eq 1 ]]; then
+  MATLAB_CMD+=", ${DEFLATE_LEVEL}"
 fi
 
 MATLAB_CMD+=");"
@@ -185,5 +217,6 @@ else
   echo "FRAME_RANGE=full movie"
 fi
 echo "DOWNSAMPLE_INPUT=${DOWNSAMPLE_INPUT}"
+echo "DEFLATE_LEVEL=${DEFLATE_LEVEL}"
 
 matlab -batch "${MATLAB_CMD}"
